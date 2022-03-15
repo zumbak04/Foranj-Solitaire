@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public enum Suits
 {
@@ -43,56 +44,18 @@ public class Card : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        ChangeCardAndSuit(Cards.Ace, Suits.Hearts);
+        ChangeCardAndSuit(Cards.Three, Suits.Clubs);
     }
     private void ChangeFaceUpSprite(Cards card, Suits suit)
     {
         // Карты в массиве cardSprites расположены по порядку так что зная масть, мы можем сместить начальную позицию в массиве что бы достать верный спрайт
         faceUpSpriteIndex = 1;
         int cardsOfSameSuit = 13;
-        switch (suit)
-        {
-            case Suits.Clubs:
-                break;
-            case Suits.Diamonds:
-                faceUpSpriteIndex += cardsOfSameSuit * 1;
-                break;
-            case Suits.Hearts:
-                faceUpSpriteIndex += cardsOfSameSuit * 2;
-                break;
-            case Suits.Spades:
-                faceUpSpriteIndex += cardsOfSameSuit * 3;
-                break;
-        }
-        switch (card)
-        {
-            case Cards.Ace:
-                break;
-            case Cards.Two:
-                faceUpSpriteIndex += 1;
-                break;
-            case Cards.Three:
-                faceUpSpriteIndex += 2;
-                break;
-            case Cards.Four:
-                faceUpSpriteIndex += 3;
-                break;
-            case Cards.Five:
-                faceUpSpriteIndex += 4;
-                break;
-            case Cards.Six:
-                faceUpSpriteIndex += 5;
-                break;
-            case Cards.Jack:
-                faceUpSpriteIndex += 6;
-                break;
-            case Cards.Queen:
-                faceUpSpriteIndex += 7;
-                break;
-            case Cards.King:
-                faceUpSpriteIndex += 8;
-                break;
-        }
+        int suitIndex = Convert.ToInt32(suit);
+        int cardIndex = Convert.ToInt32(card);
+
+        faceUpSpriteIndex += cardsOfSameSuit * suitIndex;
+        faceUpSpriteIndex += cardIndex;
 
         if (faceUpSpriteIndex < cardSprites.Length)
         {
