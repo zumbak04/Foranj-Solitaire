@@ -26,7 +26,7 @@ public class Card : MonoBehaviour
 {
     #region Properties
     public Cards card { get; private set; }
-    public Cards suit { get; private set; }
+    public Suits suit { get; private set; }
     #endregion
 
     #region Private Fields
@@ -117,7 +117,7 @@ public class Card : MonoBehaviour
     public void ChangeCardAndSuit(Cards card, Suits suit)
     {
         this.card = card;
-        this.suit = card;
+        this.suit = suit;
 
         ChangeFaceUpSprite(card, suit);
     }
