@@ -18,6 +18,10 @@ public enum Cards
     Four,
     Five,
     Six,
+    Seven,
+    Eight,
+    Nine,
+    Ten,
     Jack,
     Queen,
     King
@@ -37,6 +41,8 @@ public class Card : MonoBehaviour
 
     #region Public Fields
     public Sprite[] cardSprites;
+    public Card child;
+    public Card parent;
     #endregion
 
     #region Private Methods
@@ -48,7 +54,7 @@ public class Card : MonoBehaviour
     {
         // Карты в массиве cardSprites расположены по порядку так что зная масть, мы можем сместить начальную позицию в массиве что бы достать верный спрайт
         faceUpSpriteIndex = 1;
-        int cardsOfSameSuit = 13;
+        int cardsOfSameSuit = Enum.GetNames(typeof(Cards)).Length;
         int suitIndex = Convert.ToInt32(suit);
         int cardIndex = Convert.ToInt32(card);
 
@@ -81,6 +87,12 @@ public class Card : MonoBehaviour
     public void TurnFaceDown()
     {
         spriteRenderer.sprite = cardSprites[0];
+    }
+    public void AddParent(Card newParent)
+    {
+        newParent.child = this;
+        parent = newParent;
+        //parent.TurnFaceDown();
     }
     #endregion
 }

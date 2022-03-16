@@ -17,7 +17,9 @@ public class BoardGenerator : MonoBehaviour
     private int minCardsInBank;
     private int maxCardsInBank;
 
-    public List<GameObject> deskLocators;
+    public List<GameObject> desks;
+    public GameObject bank;
+    public GameObject sequence;
 
     private void Awake()
     {
@@ -32,7 +34,10 @@ public class BoardGenerator : MonoBehaviour
     {
         minCardsInBank = Mathf.CeilToInt((float)maxCardsOnBoard / maxSequence);
         maxCardsInBank = Mathf.CeilToInt((float)maxCardsOnBoard / minSequence);
-        deskLocators.AddRange(GameObject.FindGameObjectsWithTag("Desk"));
+        desks = new List<GameObject>();
+        desks.AddRange(GameObject.FindGameObjectsWithTag("Desk"));
+        bank = GameObject.FindGameObjectWithTag("Bank");
+        sequence = GameObject.FindGameObjectWithTag("Sequence");
 
         GenerateBoard();
     }
@@ -41,21 +46,38 @@ public class BoardGenerator : MonoBehaviour
     {
         unresolvedCardsOnBoard = maxCardsOnBoard;
         cardOrderInLayer = 0;
-        List<Cards> bank = new List<Cards>();
-        List<Cards> board = new List<Cards>();
+        List<Cards> cardsToBank = new List<Cards>();
+        List<Cards> cardsToBoard = new List<Cards>();
 
         while (unresolvedCardsOnBoard > 0)
         {
             List<Cards> newCards = GenerateOneSequence();
-            bank.Add(newCards[0]);
-            newCards.RemoveAt(0);
-            board.AddRange(newCards);
+
+            string sequenceString = "";
+            foreach (Cards card in newCards)
+            {
+                sequenceString += $"{card}, ";
+            }
+            Debug.Log(sequenceString);
+
+            int lastCardIndex = newCards.Count - 1;
+            cardsToBank.Add(newCards[lastCardIndex]);
+            newCards.RemoveAt(lastCardIndex);
+            cardsToBoard.AddRange(newCards);
         }
 
-        foreach (Cards card in board)
+        foreach (Cards card in cardsToBank)
         {
-            int deskIndex = UnityEngine.Random.Range(0, deskLocators.Count);
-            var deskCom = deskLocators[deskIndex].GetComponent<Desk>();
+            var deskCom = bank.GetComponent<Desk>();
+            deskCom.GenerateCard(card, cardOrderInLayer);
+
+            cardOrderInLayer++;
+        }
+
+        foreach (Cards card in cardsToBoard)
+        {
+            int deskIndex = UnityEngine.Random.Range(0, desks.Count);
+            var deskCom = desks[deskIndex].GetComponent<Desk>();
             deskCom.GenerateCard(card, cardOrderInLayer);
 
             cardOrderInLayer++;
@@ -63,24 +85,40 @@ public class BoardGenerator : MonoBehaviour
     }
     private List<Cards> GenerateOneSequence()
     {
-        int sequence = UnityEngine.Random.Range(minSequence, maxSequence + 1);
-        if(unresolvedCardsOnBoard < minSequence)
+        int sequenceNumber = UnityEngine.Random.Range(minSequence, maxSequence + 1);
+        int lastCardEnumIndex = Enum.GetNames(typeof(Cards)).Length - 1;
+        //bool sequenceDown = (UnityEngine.Random.Range(0, 2) == 1);
+        //bool sequenceTurn = (UnityEngine.Random.Range(0, 2) == 1);
+
+        if (unresolvedCardsOnBoard < minSequence)
         {
-            sequence += unresolvedCardsOnBoard;
+            sequenceNumber += unresolvedCardsOnBoard;
         }
         List<Cards> cards = new List<Cards>();
 
-        for(int i = 0; i < sequence; i++)
+        Cards firstCard = (Cards)UnityEngine.Random.Range(0, Enum.GetNames(typeof(Cards)).Length);
+        cards.Add(firstCard);
+        int prevCardIndex = Convert.ToInt32(firstCard);
+
+        for (int i = 0; i < sequenceNumber; i++)
         {
-            cards.Add((Cards)UnityEngine.Random.Range(0, Enum.GetNames(typeof(Cards)).Length));
+            int nextCardIndex = prevCardIndex - 1;
+
+            if(nextCardIndex > lastCardEnumIndex)
+            {
+                nextCardIndex -= lastCardEnumIndex + 1;
+            }
+            else if (nextCardIndex < 0)
+            {
+                nextCardIndex += lastCardEnumIndex + 1;
+            }
+            cards.Add((Cards)nextCardIndex);
+
+            prevCardIndex = nextCardIndex;
         }
 
-        unresolvedCardsOnBoard -= sequence;
+        unresolvedCardsOnBoard -= sequenceNumber;
 
         return cards;
-    }
-    private void GenerateCard(Cards card)
-    {
-
     }
 }
