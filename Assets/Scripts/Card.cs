@@ -31,7 +31,7 @@ public class Card : MonoBehaviour
     #endregion
 
     #region Private Fields
-    private SpriteRenderer spriteRenderer;
+    public SpriteRenderer spriteRenderer;
     private int faceUpSpriteIndex = 0;
     #endregion
 
@@ -40,11 +40,9 @@ public class Card : MonoBehaviour
     #endregion
 
     #region Private Methods
-    private void Start()
+    private void OnEnable()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-
-        ChangeCardAndSuit(Cards.Three, Suits.Clubs);
     }
     private void ChangeFaceUpSprite(Cards card, Suits suit)
     {
@@ -65,14 +63,6 @@ public class Card : MonoBehaviour
         {
             Debug.LogError($"spriteIndex, {faceUpSpriteIndex}, wend beyond cardSprites array");
         }
-    }
-    private void OnMouseEnter()
-    {
-        TurnFaceUp();
-    }
-    private void OnMouseExit()
-    {
-        TurnFaceDown();
     }
     #endregion
 
