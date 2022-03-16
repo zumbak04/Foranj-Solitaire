@@ -87,8 +87,8 @@ public class BoardGenerator : MonoBehaviour
     {
         int sequenceNumber = UnityEngine.Random.Range(minSequence, maxSequence + 1);
         int lastCardEnumIndex = Enum.GetNames(typeof(Cards)).Length - 1;
-        //bool sequenceDown = (UnityEngine.Random.Range(0, 2) == 1);
-        //bool sequenceTurn = (UnityEngine.Random.Range(0, 2) == 1);
+        bool sequenceDown = (UnityEngine.Random.value <= 0.35f);
+        bool sequenceTurn = (UnityEngine.Random.value <= 0.15f);
 
         if (unresolvedCardsOnBoard < minSequence)
         {
@@ -102,7 +102,21 @@ public class BoardGenerator : MonoBehaviour
 
         for (int i = 0; i < sequenceNumber; i++)
         {
-            int nextCardIndex = prevCardIndex - 1;
+            if (sequenceTurn && sequenceNumber / 2 <= i)
+            {
+                sequenceDown = !sequenceDown;
+                sequenceTurn = !sequenceTurn;
+            }
+
+            int nextCardIndex;
+            if (sequenceDown)
+            {
+                nextCardIndex = prevCardIndex + 1;
+            }
+            else
+            {
+                nextCardIndex = prevCardIndex - 1;
+            }
 
             if(nextCardIndex > lastCardEnumIndex)
             {
