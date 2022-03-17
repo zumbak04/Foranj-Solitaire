@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            if (boardHolder.desks.All(desk => desk.TryFindCardOnTop(out Card deskCard) && !sequenceCard.NextToCard(deskCard)))
+            if (boardHolder.desks.All(desk => !desk.TryFindCardOnTop(out Card deskCard) || !sequenceCard.NextToCard(deskCard)))
             {
                 Debug.Log("Проверка на проигрыш!");
                 uIManager.winLoseText.text = "Вы проиграли";
