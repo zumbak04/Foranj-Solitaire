@@ -35,9 +35,24 @@ public class GameManager : MonoBehaviour
     }
     public void ClickOnCard(Card card)
     {
-        if(card.desk != sequence && card.desk != bank)
+        if(CanGoToSequence(card) || card.desk == bank)
         {
             sequence.MoveCardOnTop(card);
         }
+    }
+    public bool CanGoToSequence(Card card)
+    {
+        if (card.desk != sequence)
+        {
+            if (sequence.TryFindCardOnTop(out Card topCard))
+            {
+                return topCard.NextToCard(card);
+            }
+            else
+            {
+                Debug.LogWarning("Верхний карты нет");
+            }
+        }
+        return false;
     }
 }

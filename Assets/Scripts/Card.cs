@@ -125,5 +125,19 @@ public class Card : MonoBehaviour
             newParent.Child = this;
         }
     }
+    public bool NextToCard(Card card)
+    {
+        int cardIndex = Convert.ToInt32(this.card);
+        int nextCardIndex = Convert.ToInt32(card.card);
+        int indexDif = cardIndex - nextCardIndex;
+        int lastEnumIndex = Enum.GetNames(typeof(Cards)).Length - 1;
+        Debug.Log(indexDif);
+
+        return (indexDif == 1 || indexDif == -1 || indexDif == lastEnumIndex || indexDif == -lastEnumIndex);
+    }
+    public int GetCardIndex()
+    {
+        return Convert.ToInt32(card);
+    }
     #endregion
 }

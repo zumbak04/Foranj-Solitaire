@@ -83,7 +83,7 @@ public class BoardGenerator : MonoBehaviour
     private List<Cards> GenerateOneSequence()
     {
         int sequenceNumber = UnityEngine.Random.Range(minSequence, maxSequence + 1);
-        int lastCardEnumIndex = Enum.GetNames(typeof(Cards)).Length - 1;
+        int lastEnumIndex = Enum.GetNames(typeof(Cards)).Length - 1;
         bool sequenceDown = (UnityEngine.Random.value <= 0.35f);
         bool sequenceTurn = (UnityEngine.Random.value <= 0.15f);
 
@@ -115,13 +115,13 @@ public class BoardGenerator : MonoBehaviour
                 nextCardIndex = prevCardIndex - 1;
             }
 
-            if(nextCardIndex > lastCardEnumIndex)
+            if(nextCardIndex > lastEnumIndex)
             {
-                nextCardIndex -= lastCardEnumIndex + 1;
+                nextCardIndex = 0;
             }
             else if (nextCardIndex < 0)
             {
-                nextCardIndex += lastCardEnumIndex + 1;
+                nextCardIndex = lastEnumIndex;
             }
             cards.Add((Cards)nextCardIndex);
 

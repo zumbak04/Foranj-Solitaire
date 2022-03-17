@@ -57,7 +57,10 @@ public class Desk : MonoBehaviour
     private void RemoveCard(Card card)
     {
         card.desk = null;
-        card.Parent.TurnFaceUp();
+        if (!(card.Parent is null))
+        {
+            card.Parent.TurnFaceUp();
+        }
         card.SetParent(null);
         cards.Remove(card);
     }
