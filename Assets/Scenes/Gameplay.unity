@@ -216,8 +216,9 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1231603650}
+  - {fileID: 1418377302}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -803,7 +804,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1258774744}
-  - component: {fileID: 1258774745}
   m_Layer: 0
   m_Name: Board
   m_TagString: Untagged
@@ -827,23 +827,52 @@ Transform:
   - {fileID: 175498101}
   - {fileID: 449175401}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1258774745
-MonoBehaviour:
+--- !u!1 &1418377301
+GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1258774743}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62657b4adf96b0c46bae430b7f85dc43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  desks: []
-  bank: {fileID: 0}
-  sequence: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1418377302}
+  - component: {fileID: 1418377303}
+  m_Layer: 5
+  m_Name: RawImage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1418377302
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1418377301}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 129970346}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &1418377303
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1418377301}
+  m_CullTransparentMesh: 1
 --- !u!4 &1481755956 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2236423983776686896, guid: 128901854eb66cf49b7e12eca9f9005b, type: 3}
@@ -906,7 +935,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   card: {fileID: 4610187714313049541, guid: ef54ff9ee979ec74ca76c1dc98e25271, type: 3}
-  boardHolder: {fileID: 0}
+  boardHolder: {fileID: 4141822925664873601, guid: 1748cb5fd5f8fde4abce6f992539cb6b, type: 3}
 --- !u!1 &1936824177
 GameObject:
   m_ObjectHideFlags: 0
@@ -962,7 +991,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1942963841}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 3.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

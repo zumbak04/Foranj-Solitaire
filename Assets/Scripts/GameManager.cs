@@ -7,8 +7,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance = null;
 
-    private Desk sequence;
-    private Desk bank;
+    private UIManager uIManager;
     private BoardHolder boardHolder;
 
     private void Awake()
@@ -32,14 +31,15 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        Instantiate(GameAssets.instance.boardHolder);
+        boardHolder = Instantiate(GameAssets.instance.boardHolder).GetComponent<BoardHolder>();
+        boardHolder.onBoardEmpty.AddListener(WinGame);
 
-        sequence = GameObject.FindGameObjectWithTag("Sequence").GetComponent<Desk>();
-        bank = GameObject.FindGameObjectWithTag("Bank").GetComponent<Desk>();
+        uIManager = GameObject.FindGameObjectWithTag("Canvas").GetComponent<UIManager>();
+        uIManager.winImage.gameObject.SetActive(false);
 
-        if (bank.TryFindCardOnTop(out Card card))
+        if (boardHolder.bank.TryFindCardOnTop(out Card card))
         {
-            sequence.MoveCardOnTop(card);
+            boardHolder.sequence.MoveCardOnTop(card);
         }
         else
         {
@@ -52,16 +52,16 @@ public class GameManager : MonoBehaviour
     }
     public void ClickOnCard(Card card)
     {
-        if(CanGoToSequence(card) || card.desk == bank)
+        if(CanGoToSequence(card) || card.desk == boardHolder.bank)
         {
-            sequence.MoveCardOnTop(card);
+            boardHolder.sequence.MoveCardOnTop(card);
         }
     }
     public bool CanGoToSequence(Card card)
     {
-        if (card.desk != sequence)
+        if (card.desk != boardHolder.sequence)
         {
-            if (sequence.TryFindCardOnTop(out Card topCard))
+            if (boardHolder.sequence.TryFindCardOnTop(out Card topCard))
             {
                 return topCard.NextToCard(card);
             }
@@ -71,5 +71,9 @@ public class GameManager : MonoBehaviour
             }
         }
         return false;
+    }
+    public void WinGame()
+    {
+        uIManager.winImage.gameObject.SetActive(true);
     }
 }

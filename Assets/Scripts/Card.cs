@@ -11,7 +11,7 @@ public enum Suits
     Hearts,
     Spades
 }
-public enum Cards
+public enum Values
 {
     Ace,
     Two,
@@ -31,15 +31,15 @@ public enum Cards
 public class Card : MonoBehaviour
 {
     #region Properties
-    public Cards card { get; private set; }
-    public Suits suit { get; private set; }
+    public Values Value { get; private set; }
+    public Suits Suit { get; private set; }
     public Card Child { get; private set; }
     public Card Parent { get; private set; }
     #endregion
 
     #region Private Fields
     public SpriteRenderer spriteRenderer;
-    public Collider2D collider;
+    public Collider2D cardCollider;
     private int faceUpSpriteIndex = 0;
     #endregion
 
@@ -52,13 +52,13 @@ public class Card : MonoBehaviour
     private void OnEnable()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        collider = GetComponent<Collider2D>();
+        cardCollider = GetComponent<Collider2D>();
     }
-    private void ChangeFaceUpSprite(Cards card, Suits suit)
+    private void ChangeFaceUpSprite(Values card, Suits suit)
     {
         // Карты в массиве cardSprites расположены по порядку так что зная масть, мы можем сместить начальную позицию в массиве что бы достать верный спрайт
         faceUpSpriteIndex = 1;
-        int cardsOfSameSuit = Enum.GetNames(typeof(Cards)).Length;
+        int cardsOfSameSuit = Enum.GetNames(typeof(Values)).Length;
         int suitIndex = Convert.ToInt32(suit);
         int cardIndex = Convert.ToInt32(card);
 
@@ -84,22 +84,22 @@ public class Card : MonoBehaviour
     #endregion
 
     #region Public Methods
-    public void ChangeCardAndSuit(Cards card, Suits suit)
+    public void ChangeCardAndSuit(Values card, Suits suit)
     {
-        this.card = card;
-        this.suit = suit;
+        this.Value = card;
+        this.Suit = suit;
 
         ChangeFaceUpSprite(card, suit);
     }
     public void TurnFaceUp()
     {
         spriteRenderer.sprite = cardSprites[faceUpSpriteIndex];
-        collider.enabled = true;
+        cardCollider.enabled = true;
     }
     public void TurnFaceDown()
     {
         spriteRenderer.sprite = cardSprites[0];
-        collider.enabled = false;
+        cardCollider.enabled = false;
     }
     public void SetChild(Card newChild)
     {
@@ -127,17 +127,17 @@ public class Card : MonoBehaviour
     }
     public bool NextToCard(Card card)
     {
-        int cardIndex = Convert.ToInt32(this.card);
-        int nextCardIndex = Convert.ToInt32(card.card);
+        int cardIndex = Convert.ToInt32(this.Value);
+        int nextCardIndex = Convert.ToInt32(card.Value);
         int indexDif = cardIndex - nextCardIndex;
-        int lastEnumIndex = Enum.GetNames(typeof(Cards)).Length - 1;
-        Debug.Log(indexDif);
+        int lastEnumIndex = Enum.GetNames(typeof(Values)).Length - 1;
 
+        return true;
         return (indexDif == 1 || indexDif == -1 || indexDif == lastEnumIndex || indexDif == -lastEnumIndex);
     }
     public int GetCardIndex()
     {
-        return Convert.ToInt32(card);
+        return Convert.ToInt32(Value);
     }
     #endregion
 }

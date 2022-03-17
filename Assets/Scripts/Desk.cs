@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using DG.Tweening;
+using UnityEngine.Events;
 
 public class Desk : MonoBehaviour
 {
     #region Private Fields
     public Vector3 offset;
-    protected List<Card> cards;
     #endregion
 
     #region Properties
@@ -16,15 +16,20 @@ public class Desk : MonoBehaviour
     {
         get
         {
-            return gameObject.transform.position + offset * cards.Count;
+            return gameObject.transform.position + offset * Cards.Count;
         }
     }
+    public List<Card> Cards { get; private set; }
+    #endregion
+
+    #region Events
+    public UnityEvent onDeskEmpty;
     #endregion
 
     #region Private Methods
     private void Awake()
     {
-        cards = new List<Card>();
+        Cards = new List<Card>();
     }
     private void AddCardOnTop(Card card)
     {
@@ -48,11 +53,11 @@ public class Desk : MonoBehaviour
             card.SetParent(parent);
             parent.TurnFaceDown();
         }
-        cards.Add(card);
+        Cards.Add(card);
         card.desk = this;
 
         //Определяет порядок отрисовки
-        cardCom.spriteRenderer.sortingOrder = cards.Count;
+        cardCom.spriteRenderer.sortingOrder = Cards.Count;
     }
     private void RemoveCard(Card card)
     {
@@ -62,7 +67,13 @@ public class Desk : MonoBehaviour
             card.Parent.TurnFaceUp();
         }
         card.SetParent(null);
-        cards.Remove(card);
+        Cards.Remove(card);
+
+        if(Cards.Count < 1)
+        {
+            Debug.Log("Колода опустела");
+            onDeskEmpty.Invoke();
+        }
     }
     #endregion
 
@@ -77,7 +88,7 @@ public class Desk : MonoBehaviour
         card.transform.DOMove(NewCardPosition, 0.5f);
         AddCardOnTop(card);
     }
-    public void GenerateCard(Cards card)
+    public void GenerateCard(Values card)
     {
         Suits suit = (Suits)UnityEngine.Random.Range(0, Enum.GetNames(typeof(Suits)).Length);
 
@@ -89,9 +100,9 @@ public class Desk : MonoBehaviour
     public bool TryFindCardOnTop(out Card card)
     {
         card = null;
-        if (cards.Count > 0)
+        if (Cards.Count > 0)
         {
-            card = cards[cards.Count - 1];
+            card = Cards[Cards.Count - 1];
             return true;
         }
         else
