@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class GameManager : MonoBehaviour
 
     private Desk sequence;
     private Desk bank;
+    private BoardHolder boardHolder;
 
     private void Awake()
     {
@@ -20,18 +22,33 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-        sequence = BoardGenerator.instance.sequence;
-        bank = BoardGenerator.instance.bank;
-
-        InitGame();
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        StartGame();
+    }
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        StartGame();
     }
 
-    public void InitGame()
+    public void StartGame()
     {
-        if(bank.TryFindCardOnTop(out Card card))
+        Instantiate(GameAssets.instance.boardHolder);
+
+        sequence = GameObject.FindGameObjectWithTag("Sequence").GetComponent<Desk>();
+        bank = GameObject.FindGameObjectWithTag("Bank").GetComponent<Desk>();
+
+        if (bank.TryFindCardOnTop(out Card card))
         {
             sequence.MoveCardOnTop(card);
         }
+        else
+        {
+            Debug.LogError("Банк пуст!");
+        }
+    }
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
     }
     public void ClickOnCard(Card card)
     {

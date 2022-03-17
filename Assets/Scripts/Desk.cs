@@ -22,7 +22,7 @@ public class Desk : MonoBehaviour
     #endregion
 
     #region Private Methods
-    private void Start()
+    private void Awake()
     {
         cards = new List<Card>();
     }

@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class BoardGenerator : MonoBehaviour
+public class BoardHolder : MonoBehaviour
 {
-    public static BoardGenerator instance = null;
-
     private int minSequence = 2;
     private int maxSequence = 7;
 
@@ -22,19 +20,11 @@ public class BoardGenerator : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == null)
-            instance = this;
-        else if (instance != this)
-            Destroy(gameObject);
-
-        DontDestroyOnLoad(gameObject);
-    }
-    private void Start()
-    {
         minCardsInBank = Mathf.CeilToInt((float)maxCardsOnBoard / maxSequence);
         maxCardsInBank = Mathf.CeilToInt((float)maxCardsOnBoard / minSequence);
         desks = new List<Desk>();
-        foreach(GameObject deskObj in GameObject.FindGameObjectsWithTag("Desk"))
+
+        foreach (GameObject deskObj in GameObject.FindGameObjectsWithTag("Desk"))
         {
             desks.Add(deskObj.GetComponent<Desk>());
         }
@@ -44,7 +34,7 @@ public class BoardGenerator : MonoBehaviour
         GenerateBoard();
     }
 
-    private void GenerateBoard()
+    public void GenerateBoard()
     {
         unresolvedCardsOnBoard = maxCardsOnBoard;
         List<Cards> cardsToBank = new List<Cards>();

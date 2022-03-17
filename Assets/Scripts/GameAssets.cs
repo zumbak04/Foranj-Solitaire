@@ -7,6 +7,7 @@ public class GameAssets : MonoBehaviour
     public static GameAssets instance = null;
 
     public GameObject card;
+    public GameObject boardHolder;
 
     private void Awake()
     {

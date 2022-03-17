@@ -7,6 +7,7 @@ TagManager:
   - Desk
   - Bank
   - Sequence
+  - Canvas
   layers:
   - Default
   - TransparentFX
