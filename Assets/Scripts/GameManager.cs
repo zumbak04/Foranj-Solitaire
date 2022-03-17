@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
@@ -32,10 +33,9 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         boardHolder = Instantiate(GameAssets.instance.boardHolder).GetComponent<BoardHolder>();
-        boardHolder.onBoardEmpty.AddListener(WinGame);
+        boardHolder.sequence.onCardAdd.AddListener(CheckIfLoseGame);
 
         uIManager = GameObject.FindGameObjectWithTag("Canvas").GetComponent<UIManager>();
-        uIManager.winImage.gameObject.SetActive(false);
 
         if (boardHolder.bank.TryFindCardOnTop(out Card card))
         {
@@ -74,6 +74,28 @@ public class GameManager : MonoBehaviour
     }
     public void WinGame()
     {
-        uIManager.winImage.gameObject.SetActive(true);
+        uIManager.winLoseImage.gameObject.SetActive(true);
+    }
+    public void CheckIfLoseGame()
+    {
+        if (boardHolder.bank.Cards.Count < 1 && boardHolder.sequence.TryFindCardOnTop(out Card sequenceCard))
+        {
+            Debug.Log("Проверка на проигрыш!");
+            Debug.Log(sequenceCard.Value);
+            foreach (Desk desk in boardHolder.desks)
+            {
+                if(desk.TryFindCardOnTop(out Card deskCard))
+                {
+                    Debug.Log(deskCard.Value);
+                }
+            }
+
+            if (boardHolder.desks.All(desk => desk.TryFindCardOnTop(out Card deskCard) && !sequenceCard.NextToCard(deskCard)))
+            {
+                Debug.Log("Проверка на проигрыш!");
+                uIManager.winLoseText.text = "Вы проиграли";
+                uIManager.winLoseImage.gameObject.SetActive(true);
+            }
+        }
     }
 }

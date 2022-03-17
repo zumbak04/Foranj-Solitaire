@@ -17,8 +17,6 @@ public class BoardHolder : MonoBehaviour
     public Desk bank;
     public Desk sequence;
 
-    public UnityEvent onBoardEmpty;
-
     #region Private Methods
     private void Awake()
     {
@@ -131,7 +129,7 @@ public class BoardHolder : MonoBehaviour
         if(!desks.Any(desk => desk.Cards.Count > 0))
         {
             Debug.Log("Все колоды опустели");
-            onBoardEmpty.Invoke();
+            GameManager.instance.WinGame();
         }
     }
     #endregion

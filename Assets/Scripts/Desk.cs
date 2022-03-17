@@ -24,6 +24,7 @@ public class Desk : MonoBehaviour
 
     #region Events
     public UnityEvent onDeskEmpty;
+    public UnityEvent onCardAdd;
     #endregion
 
     #region Private Methods
@@ -55,6 +56,9 @@ public class Desk : MonoBehaviour
         }
         Cards.Add(card);
         card.desk = this;
+
+        //Вызывает эвент после того как карта добалена в новую колоду
+        onCardAdd.Invoke();
 
         //Определяет порядок отрисовки
         cardCom.spriteRenderer.sortingOrder = Cards.Count;

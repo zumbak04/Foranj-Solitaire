@@ -132,7 +132,6 @@ public class Card : MonoBehaviour
         int indexDif = cardIndex - nextCardIndex;
         int lastEnumIndex = Enum.GetNames(typeof(Values)).Length - 1;
 
-        return true;
         return (indexDif == 1 || indexDif == -1 || indexDif == lastEnumIndex || indexDif == -lastEnumIndex);
     }
     public int GetCardIndex()

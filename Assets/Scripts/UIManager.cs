@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public Button restartButton;
-    public Image winImage;
+    public Image winLoseImage;
+    public Text winLoseText;
 
     private void Start()
     {
