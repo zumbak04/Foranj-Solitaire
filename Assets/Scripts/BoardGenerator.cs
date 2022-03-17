@@ -12,14 +12,13 @@ public class BoardGenerator : MonoBehaviour
 
     private int unresolvedCardsOnBoard;
     private int maxCardsOnBoard = 40;
-    private int cardOrderInLayer;
 
     private int minCardsInBank;
     private int maxCardsInBank;
 
-    public List<GameObject> desks;
-    public GameObject bank;
-    public GameObject sequence;
+    public List<Desk> desks;
+    public Desk bank;
+    public Desk sequence;
 
     private void Awake()
     {
@@ -34,10 +33,13 @@ public class BoardGenerator : MonoBehaviour
     {
         minCardsInBank = Mathf.CeilToInt((float)maxCardsOnBoard / maxSequence);
         maxCardsInBank = Mathf.CeilToInt((float)maxCardsOnBoard / minSequence);
-        desks = new List<GameObject>();
-        desks.AddRange(GameObject.FindGameObjectsWithTag("Desk"));
-        bank = GameObject.FindGameObjectWithTag("Bank");
-        sequence = GameObject.FindGameObjectWithTag("Sequence");
+        desks = new List<Desk>();
+        foreach(GameObject deskObj in GameObject.FindGameObjectsWithTag("Desk"))
+        {
+            desks.Add(deskObj.GetComponent<Desk>());
+        }
+        bank = GameObject.FindGameObjectWithTag("Bank").GetComponent<Desk>();
+        sequence = GameObject.FindGameObjectWithTag("Sequence").GetComponent<Desk>();
 
         GenerateBoard();
     }
@@ -45,7 +47,6 @@ public class BoardGenerator : MonoBehaviour
     private void GenerateBoard()
     {
         unresolvedCardsOnBoard = maxCardsOnBoard;
-        cardOrderInLayer = 0;
         List<Cards> cardsToBank = new List<Cards>();
         List<Cards> cardsToBoard = new List<Cards>();
 
@@ -69,18 +70,14 @@ public class BoardGenerator : MonoBehaviour
         foreach (Cards card in cardsToBank)
         {
             var deskCom = bank.GetComponent<Desk>();
-            deskCom.GenerateCard(card, cardOrderInLayer);
-
-            cardOrderInLayer++;
+            deskCom.GenerateCard(card);
         }
 
         foreach (Cards card in cardsToBoard)
         {
             int deskIndex = UnityEngine.Random.Range(0, desks.Count);
-            var deskCom = desks[deskIndex].GetComponent<Desk>();
-            deskCom.GenerateCard(card, cardOrderInLayer);
-
-            cardOrderInLayer++;
+            var deskCom = desks[deskIndex];
+            deskCom.GenerateCard(card);
         }
     }
     private List<Cards> GenerateOneSequence()

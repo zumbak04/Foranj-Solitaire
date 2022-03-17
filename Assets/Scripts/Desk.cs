@@ -2,50 +2,99 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using DG.Tweening;
 
 public class Desk : MonoBehaviour
 {
+    #region Private Fields
     public Vector3 offset;
-    protected List<GameObject> cards;
+    protected List<Card> cards;
+    #endregion
 
-    private void Start()
+    #region Properties
+    private Vector3 NewCardPosition
     {
-        cards = new List<GameObject>();
-    }
-
-    public void AddCardOnTop(GameObject card)
-    {
-        GameObject parent = FindCardOnTop();
-        card.transform.parent = parent.transform;
-        cards.Add(card);
-
-        var cardCom = card.GetComponent<Card>();
-        if(parent.TryGetComponent<Card>(out Card parentCom))
+        get
         {
-            cardCom.AddParent(parentCom);
+            return gameObject.transform.position + offset * cards.Count;
         }
     }
-    public void GenerateCard(Cards card, int orderInLayer)
+    #endregion
+
+    #region Private Methods
+    private void Start()
+    {
+        cards = new List<Card>();
+    }
+    private void AddCardOnTop(Card card)
+    {
+        if(card.desk == this)
+        {
+            return;
+        }
+
+        var cardCom = card.GetComponent<Card>();
+
+        //Делает карту дочерним элементом
+        card.transform.parent = gameObject.transform;
+
+        //Добавляет карту в колоду
+        if(!(card.desk is null))
+        {
+            card.desk.RemoveCard(card);
+        }
+        if (TryFindCardOnTop(out Card parent))
+        {
+            card.SetParent(parent);
+            parent.TurnFaceDown();
+        }
+        cards.Add(card);
+        card.desk = this;
+
+        //Определяет порядок отрисовки
+        cardCom.spriteRenderer.sortingOrder = cards.Count;
+    }
+    private void RemoveCard(Card card)
+    {
+        card.desk = null;
+        card.Parent.TurnFaceUp();
+        card.SetParent(null);
+        cards.Remove(card);
+    }
+    #endregion
+
+    #region Public Methods
+    public void MoveCardOnTop(Card card)
+    {
+        if (card.desk == this)
+        {
+            return;
+        }
+
+        card.transform.DOMove(NewCardPosition, 0.5f);
+        AddCardOnTop(card);
+    }
+    public void GenerateCard(Cards card)
     {
         Suits suit = (Suits)UnityEngine.Random.Range(0, Enum.GetNames(typeof(Suits)).Length);
 
-        Transform parent = FindCardOnTop().transform;
-        var cardObj = Instantiate(GameAssets.instance.card, parent.position + offset, Quaternion.identity);
-        AddCardOnTop(cardObj);
+        var newCard = Instantiate(GameAssets.instance.card, NewCardPosition, Quaternion.identity).GetComponent<Card>();
 
-        var cardCom = cardObj.GetComponent<Card>();
-        cardCom.ChangeCardAndSuit(card, suit);
-        cardCom.spriteRenderer.sortingOrder = orderInLayer;
+        AddCardOnTop(newCard);
+        newCard.ChangeCardAndSuit(card, suit);
     }
-    public GameObject FindCardOnTop()
+    public bool TryFindCardOnTop(out Card card)
     {
-        if (cards.Count < 1)
+        card = null;
+        if (cards.Count > 0)
         {
-            return gameObject;
+            card = cards[cards.Count - 1];
+            return true;
         }
         else
         {
-            return cards[cards.Count - 1];
+            return false;
         }
     }
+    #endregion
 }

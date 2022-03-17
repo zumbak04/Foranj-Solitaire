@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using DG.Tweening;
 
 public enum Suits
 {
@@ -32,23 +33,26 @@ public class Card : MonoBehaviour
     #region Properties
     public Cards card { get; private set; }
     public Suits suit { get; private set; }
+    public Card Child { get; private set; }
+    public Card Parent { get; private set; }
     #endregion
 
     #region Private Fields
     public SpriteRenderer spriteRenderer;
+    public Collider2D collider;
     private int faceUpSpriteIndex = 0;
     #endregion
 
     #region Public Fields
     public Sprite[] cardSprites;
-    public Card child;
-    public Card parent;
+    public Desk desk;
     #endregion
 
     #region Private Methods
     private void OnEnable()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        collider = GetComponent<Collider2D>();
     }
     private void ChangeFaceUpSprite(Cards card, Suits suit)
     {
@@ -70,6 +74,13 @@ public class Card : MonoBehaviour
             Debug.LogError($"spriteIndex, {faceUpSpriteIndex}, wend beyond cardSprites array");
         }
     }
+    private void OnMouseDown()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            GameManager.instance.ClickOnCard(this);
+        }
+    }
     #endregion
 
     #region Public Methods
@@ -83,16 +94,36 @@ public class Card : MonoBehaviour
     public void TurnFaceUp()
     {
         spriteRenderer.sprite = cardSprites[faceUpSpriteIndex];
+        collider.enabled = true;
     }
     public void TurnFaceDown()
     {
         spriteRenderer.sprite = cardSprites[0];
+        collider.enabled = false;
     }
-    public void AddParent(Card newParent)
+    public void SetChild(Card newChild)
     {
-        newParent.child = this;
-        parent = newParent;
-        //parent.TurnFaceDown();
+        if (!(Child is null))
+        {
+            Child.SetParent(null);
+        }
+        if (!(newChild is null))
+        {
+            newChild.SetParent(this);
+        }
+    }
+    public void SetParent(Card newParent)
+    {
+        if (!(Parent is null))
+        {
+            Parent.Child = null;
+        }
+
+        Parent = newParent;
+        if (!(newParent is null))
+        {
+            newParent.Child = this;
+        }
     }
     #endregion
 }

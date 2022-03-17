@@ -805,10 +805,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1258774744}
     m_Modifications:
-    - target: {fileID: -2953280147197711131, guid: 12c595b484482c743a6badb94094a18c, type: 3}
-      propertyPath: offset.x
-      value: 0.15
-      objectReference: {fileID: 0}
     - target: {fileID: 613522923993618346, guid: 12c595b484482c743a6badb94094a18c, type: 3}
       propertyPath: m_Name
       value: BankLocator
@@ -866,13 +862,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1258774744}
     m_Modifications:
+    - target: {fileID: -5525212338880505605, guid: 01a145a56ece77b4bb5db4534f06a6ed, type: 3}
+      propertyPath: offset.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5157141980026533817, guid: 01a145a56ece77b4bb5db4534f06a6ed, type: 3}
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5157141980026533817, guid: 01a145a56ece77b4bb5db4534f06a6ed, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 5157141980026533817, guid: 01a145a56ece77b4bb5db4534f06a6ed, type: 3}
       propertyPath: m_LocalPosition.y
