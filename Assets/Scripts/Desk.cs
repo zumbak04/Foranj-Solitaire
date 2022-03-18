@@ -27,14 +27,51 @@ public class Desk : MonoBehaviour
     public UnityEvent onCardAdd;
     #endregion
 
+    #region Public Methods
+    public void MoveCardOnTop(Card card)
+    {
+        // Если карта уже часть колоды
+        if (card.desk == this)
+        {
+            return;
+        }
+
+        card.transform.DOMove(NewCardPosition, 0.5f);
+        AssignCardOnTop(card);
+    }
+    public void GenerateCard(Values card)
+    {
+        Suits suit = (Suits)UnityEngine.Random.Range(0, Enum.GetNames(typeof(Suits)).Length);
+
+        var newCard = Instantiate(GameAssets.instance.card, NewCardPosition, Quaternion.identity).GetComponent<Card>();
+
+        AssignCardOnTop(newCard);
+        newCard.ChangeCardAndSuit(card, suit);
+    }
+    public bool TryFindCardOnTop(out Card card)
+    {
+        card = null;
+        if (Cards.Count > 0)
+        {
+            card = Cards[Cards.Count - 1];
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    #endregion
+
     #region Private Methods
     private void Awake()
     {
         Cards = new List<Card>();
     }
-    private void AddCardOnTop(Card card)
+    private void AssignCardOnTop(Card card)
     {
-        if(card.desk == this)
+        // Если карта уже часть колоды
+        if (card.desk == this)
         {
             return;
         }
@@ -61,7 +98,7 @@ public class Desk : MonoBehaviour
         onCardAdd.Invoke();
 
         //Определяет порядок отрисовки
-        cardCom.spriteRenderer.sortingOrder = Cards.Count;
+        cardCom.SpriteRenderer.sortingOrder = Cards.Count;
     }
     private void RemoveCard(Card card)
     {
@@ -77,41 +114,6 @@ public class Desk : MonoBehaviour
         {
             Debug.Log("Колода опустела");
             onDeskEmpty.Invoke();
-        }
-    }
-    #endregion
-
-    #region Public Methods
-    public void MoveCardOnTop(Card card)
-    {
-        if (card.desk == this)
-        {
-            return;
-        }
-
-        card.transform.DOMove(NewCardPosition, 0.5f);
-        AddCardOnTop(card);
-    }
-    public void GenerateCard(Values card)
-    {
-        Suits suit = (Suits)UnityEngine.Random.Range(0, Enum.GetNames(typeof(Suits)).Length);
-
-        var newCard = Instantiate(GameAssets.instance.card, NewCardPosition, Quaternion.identity).GetComponent<Card>();
-
-        AddCardOnTop(newCard);
-        newCard.ChangeCardAndSuit(card, suit);
-    }
-    public bool TryFindCardOnTop(out Card card)
-    {
-        card = null;
-        if (Cards.Count > 0)
-        {
-            card = Cards[Cards.Count - 1];
-            return true;
-        }
-        else
-        {
-            return false;
         }
     }
     #endregion

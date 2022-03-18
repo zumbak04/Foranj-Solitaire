@@ -35,52 +35,18 @@ public class Card : MonoBehaviour
     public Suits Suit { get; private set; }
     public Card Child { get; private set; }
     public Card Parent { get; private set; }
+    public SpriteRenderer SpriteRenderer { get; private set; }
+    public Collider2D CardCollider { get; private set; }
     #endregion
 
     #region Private Fields
-    public SpriteRenderer spriteRenderer;
-    public Collider2D cardCollider;
     private int faceUpSpriteIndex = 0;
     #endregion
 
     #region Public Fields
-    public Sprite[] cardSprites;
+    [SerializeField]
+    private Sprite[] cardSprites;
     public Desk desk;
-    #endregion
-
-    #region Private Methods
-    private void OnEnable()
-    {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        cardCollider = GetComponent<Collider2D>();
-    }
-    private void ChangeFaceUpSprite(Values card, Suits suit)
-    {
-        // Карты в массиве cardSprites расположены по порядку так что зная масть, мы можем сместить начальную позицию в массиве что бы достать верный спрайт
-        faceUpSpriteIndex = 1;
-        int cardsOfSameSuit = Enum.GetNames(typeof(Values)).Length;
-        int suitIndex = Convert.ToInt32(suit);
-        int cardIndex = Convert.ToInt32(card);
-
-        faceUpSpriteIndex += cardsOfSameSuit * suitIndex;
-        faceUpSpriteIndex += cardIndex;
-
-        if (faceUpSpriteIndex < cardSprites.Length)
-        {
-            spriteRenderer.sprite = cardSprites[faceUpSpriteIndex];
-        }
-        else
-        {
-            Debug.LogError($"spriteIndex, {faceUpSpriteIndex}, wend beyond cardSprites array");
-        }
-    }
-    private void OnMouseDown()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            GameManager.instance.ClickOnCard(this);
-        }
-    }
     #endregion
 
     #region Public Methods
@@ -93,13 +59,13 @@ public class Card : MonoBehaviour
     }
     public void TurnFaceUp()
     {
-        spriteRenderer.sprite = cardSprites[faceUpSpriteIndex];
-        cardCollider.enabled = true;
+        SpriteRenderer.sprite = cardSprites[faceUpSpriteIndex];
+        CardCollider.enabled = true;
     }
     public void TurnFaceDown()
     {
-        spriteRenderer.sprite = cardSprites[0];
-        cardCollider.enabled = false;
+        SpriteRenderer.sprite = cardSprites[0];
+        CardCollider.enabled = false;
     }
     public void SetChild(Card newChild)
     {
@@ -137,6 +103,41 @@ public class Card : MonoBehaviour
     public int GetCardIndex()
     {
         return Convert.ToInt32(Value);
+    }
+    #endregion
+
+    #region Private Methods
+    private void Awake()
+    {
+        SpriteRenderer = GetComponent<SpriteRenderer>();
+        CardCollider = GetComponent<Collider2D>();
+    }
+    private void ChangeFaceUpSprite(Values card, Suits suit)
+    {
+        // Карты в массиве cardSprites расположены по порядку так что зная масть, мы можем сместить начальную позицию в массиве что бы достать верный спрайт
+        faceUpSpriteIndex = 1;
+        int cardsOfSameSuit = Enum.GetNames(typeof(Values)).Length;
+        int suitIndex = Convert.ToInt32(suit);
+        int cardIndex = Convert.ToInt32(card);
+
+        faceUpSpriteIndex += cardsOfSameSuit * suitIndex;
+        faceUpSpriteIndex += cardIndex;
+
+        if (faceUpSpriteIndex < cardSprites.Length)
+        {
+            SpriteRenderer.sprite = cardSprites[faceUpSpriteIndex];
+        }
+        else
+        {
+            Debug.LogError($"spriteIndex, {faceUpSpriteIndex}, wend beyond cardSprites array");
+        }
+    }
+    private void OnMouseDown()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            GameManager.instance.ClickOnCard(this);
+        }
     }
     #endregion
 }
