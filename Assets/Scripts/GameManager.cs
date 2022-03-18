@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
     }
     public void ClickOnCard(Card card)
     {
-        if (CanGoToSequence(card) || card.desk == boardHolder.Bank || isGameStarted)
+        if (isGameStarted && (CanGoToSequence(card) || card.desk == boardHolder.Bank))
         {
             boardHolder.Sequence.MoveCardOnTop(card);
         }
