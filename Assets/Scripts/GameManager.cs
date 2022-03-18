@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     private UIManager uIManager;
     private BoardHolder boardHolder;
+    private bool isGameStarted;
 
     private void Awake()
     {
@@ -23,19 +24,26 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
-        StartGame();
+        InitGame();
     }
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        InitGame();
         StartGame();
     }
 
-    public void StartGame()
+    public void InitGame()
     {
         boardHolder = Instantiate(GameAssets.instance.boardHolder).GetComponent<BoardHolder>();
-        boardHolder.sequence.onCardAdd.AddListener(CheckIfLoseGame);
-
         uIManager = GameObject.FindGameObjectWithTag("Canvas").GetComponent<UIManager>();
+    }
+    public void StartGame()
+    {
+        isGameStarted = true;
+        uIManager.startButton.gameObject.SetActive(false);
+        uIManager.restartButton.gameObject.SetActive(true);
+
+        boardHolder.sequence.onCardAdd.AddListener(CheckIfLoseGame);
 
         if (boardHolder.bank.TryFindCardOnTop(out Card card))
         {
@@ -52,7 +60,7 @@ public class GameManager : MonoBehaviour
     }
     public void ClickOnCard(Card card)
     {
-        if(CanGoToSequence(card) || card.desk == boardHolder.bank)
+        if(CanGoToSequence(card) || card.desk == boardHolder.bank || isGameStarted)
         {
             boardHolder.sequence.MoveCardOnTop(card);
         }
